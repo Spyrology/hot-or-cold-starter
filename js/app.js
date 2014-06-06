@@ -33,7 +33,6 @@ function genNum() {
 function screenGuess(guess) {
 	if (isNaN(guess)) {
 		setFeedback("Please enter numerical value between 1 and 100");
-		console.log("Testing 123");
 		return true;
 	}
 	else if (0 > guess || guess > 100) {
@@ -78,8 +77,6 @@ function submitGuess() {
 			setFocus();
 		}
 		else {
-			guessSubmitted = $("#userGuess").val();
-			console.log("Made it!");
 			$("#guessList").append($("<li>" + guessSubmitted + "</li>"));
 			guessCount++;
 			setGuessCount();
