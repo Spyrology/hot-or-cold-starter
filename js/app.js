@@ -5,7 +5,8 @@ var evalGuess;
 
 /*--- Set total guess count ---*/
 function setGuessCount() {
-	$("#count").text(guessCount);
+	$("#guessContainer").append($("<div class='count animated flipInX'></div>"));
+	$(".count").text(guessCount);
 }
 
 /*--- Set the feedback ---*/
@@ -32,7 +33,7 @@ function genNum() {
 /*--- Screen user input to require numerical input between 1 - 100 ---*/
 function screenGuess(guess) {
 	if (isNaN(guess)) {
-		setFeedback("Please enter numerical value between 1 and 100");
+		setFeedback("Please enter a numerical value between 1 and 100");
 		return true;
 	}
 	else if (0 > guess || guess > 100) {
@@ -75,22 +76,33 @@ function submitGuess() {
 		if (screenGuess(guessSubmitted)) {
 			clearInput();
 			setFocus();
+			return true;
+		}
+		else if (guessCount == 16) {
+			setFeedback("Oh man! You lost!! Start a new game to try again!");
 		}
 		else {
-			$("#guessList").append($("<li>" + guessSubmitted + "</li>"));
+			if (((guessCount + 2) % 2) == 0) {
+				$("#guessBox-left").prepend($("<li class='animated bounceInDown'>" + guessSubmitted + "</li>"));
+			}
+			else {
+				$("#guessBox-right").prepend($("<li class='animated bounceInDown'>" + guessSubmitted + "</li>"));
+			}; 
 			guessCount++;
+			$(".count").remove();
 			setGuessCount();
 			/*--- Normalize user's guess and store in variable ---*/
 			evalGuess = (Math.abs(numGen - guessSubmitted));
 			guessTemp();
 			clearInput();
 			setFocus();
-		}
+		};
 };
 
 /*--- Clear guess list, reset guess count, focus and feedback, generate a new number when user starts new game ---*/
 function newGame() {
-	$("#guessList").empty();
+	$(".guessList").empty();
+	$(".count").remove();
 	guessCount = 0;
 	setGuessCount(guessCount);
 	setFeedback("Make your Guess!");
@@ -103,7 +115,7 @@ $(document).ready(function(){
 	newGame();
 
 	/*--- User creates new game ---*/
-	$(".new").click(function() {
+	$("#new").click(function() {
 		newGame();
 	});
 
@@ -114,7 +126,7 @@ $(document).ready(function(){
 	});
 
 	/*--- Display information modal box ---*/
-  $(".what").click(function(){
+  $("#what").click(function(){
     $(".overlay").fadeIn(1000);
   });
 
