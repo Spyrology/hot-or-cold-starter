@@ -2,6 +2,7 @@ var numGen;
 var guessSubmitted;
 var guessCount = 0;
 var evalGuess;
+var gameWon = false;
 
 /*--- Set total guess count ---*/
 function setGuessCount() {
@@ -40,18 +41,20 @@ function screenGuess(guess) {
 		setFeedback("Please enter a number between 1 and 100");
 		return true;
 	}
-	 else {
+	else if ($.trim(guess) == "") {
+		setFeedback("Please enter a number between 1 and 100");
+		return true;
+	}
+	else {
 		return false;
 	}
 };
 
 /*--- Compare user's guess against random number generated, and provide feedback ---*/
 function guessTemp() {
-	if ((numGen - guessSubmitted) == 0) {
+	if (numGen == guessSubmitted) {
 		setFeedback("We have a winner!!");
-	}
-	else if ((numGen - guessSubmitted) == 0) {
-		setFeedback("We have a winner!!");
+		gameWon = true;
 	}
 	else if (1 <= evalGuess && evalGuess < 11) {
 		setFeedback("Very hot!");
@@ -78,8 +81,13 @@ function submitGuess() {
 			setFocus();
 			return true;
 		}
+		else if (gameWon == true) {
+			setFeedback("Double or nothing? Play again if you dare!");
+			return true;
+		}
 		else if (guessCount == 16) {
 			setFeedback("Oh man! You lost!! Start a new game to try again!");
+			return true;
 		}
 		else {
 			if (((guessCount + 2) % 2) == 0) {
@@ -106,6 +114,7 @@ function newGame() {
 	guessCount = 0;
 	setGuessCount(guessCount);
 	setFeedback("Make your Guess!");
+	gameWon = false;
 	genNum();
 	setFocus();
 	clearInput();
